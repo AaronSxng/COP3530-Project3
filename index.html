@@ -1,16 +1,41 @@
 <!DOCTYPE html>
 
 <html lang="en">
+  <meta charset="utf-8">
   <head>
     <title>Test</title>
     <meta name="description" content="daw" />
     <meta name="author" content="Aaron Song" />
+    <style></style>
+    <!-- Import styles-->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script src="https://pyscript.net/alpha/pyscript.js" defer></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
   </head>
 
   <body>
+    <div class="container">
+      <svg class="svg-container"></svg>
+      <div class="user_interface">
+        <div class="item 1">Item 1</div>
+        <div class="item 2">
+          <input type="text" />
+          <button>
+            <svg xlmns="http://www.w3.org/2000/svg" width="30" height="30">
+
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <p id="text"></p>
+    <py-script src="src/scripts.py">
+      print("hello world")
+      pyscript.write("text", 2)
+    </py-script>
     <meta charset="utf-8" />
-    <svg width="960" height="600"></svg>
-    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="index.js"></script>
   </body>
 </html>

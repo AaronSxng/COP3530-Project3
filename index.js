@@ -6,9 +6,11 @@
  var graphData = {
    nodes: [{ name: "A" }, { name: "B" }, { name: "C" }, { name: "D" }],
    links: [
-     { source: "A", target: "B", target: "C", target: "D" },
-     { source: "B", target: "C" },
-     { source: "D", target: "C" }
+     { source: "A", target: "B"},
+     { source: "A", target: "C"},
+     { source: "A", target: "D"},
+     //{ source: "B", target: "C" },
+     //{ source: "D", target: "C" }
    ]
  };
 
