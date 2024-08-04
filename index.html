@@ -3,38 +3,50 @@
 <html lang="en">
   <meta charset="utf-8">
   <head>
-    <title>Test</title>
-    <meta name="description" content="daw" />
+    <title>WIKI-RACERS</title>
+    <meta name="description" content="Find the shortest path between two Wikipedia pages" />
     <meta name="author" content="Aaron Song" />
     <style></style>
     <!-- Import styles-->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <link rel="stylesheet" href="" />
     <script src="https://pyscript.net/alpha/pyscript.js" defer></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    
   </head>
 
   <body>
     <div class="container">
-      <svg class="svg-container"></svg>
+      <svg class="svg-container" viewBox="-500 -500 1000 1000"></svg>
       <div class="user_interface">
-        <div class="item 1">Item 1</div>
-        <div class="item 2">
-          <input type="text" />
-          <button>
-            <svg xlmns="http://www.w3.org/2000/svg" width="30" height="30">
-
-            </svg>
-          </button>
+        <div class="title">
+          <p1>Wiki-Racers</p1>
         </div>
+        <div class="gif-container">
+          <img src="assets/mcqueen.gif" alt="K-Chow">
+        </div>
+        <div class="context">
+          <p2>Find the shortest path between two <br>Wikipedia pages</p1>
+        </div>
+        <div class="input-1">
+          <input type="text" placeholder="Enter the first page" text-align="center" />
+        </div>
+        <div class="placeholder">
+          <p1>. . .</p1>
+        </div>
+        <div class="input-2">
+          <input type="text" placeholder="Enter the second page" text-align="center" />
+        </div>
+        <a href="#" class="button">Enter</a>
+        <p id="text"></p>
+        <py-script src="src/scripts.py">
+          print("hello world")
+          pyscript.write("text", 2)
+        </py-script>
       </div>
 
     </div>
-    <p id="text"></p>
-    <py-script src="src/scripts.py">
-      print("hello world")
-      pyscript.write("text", 2)
-    </py-script>
     <meta charset="utf-8" />
     <script src="index.js"></script>
   </body>

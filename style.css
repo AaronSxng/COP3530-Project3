@@ -1,11 +1,21 @@
 /* Base Styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
 h1 {
     color:green;
 }
 
 svg {
-    width: 80%;
-    height: 600;
+    width: auto;
+    height: auto;
     border: 1px solid #000;
 }
 /* End of Base Styles */
@@ -18,20 +28,119 @@ svg {
 }
 
 .user_interface {
+    width: auto;
+    height: 98vh;
+    background-color: rgb(106, 168, 209);
+    border-radius: 20px; /* Radius for rounded corners */
+    /*
+    border: 2px solid darkblue; /* Optional border */
+    margin: 1%; /* Optional margin */
+    padding-left: 0px;
     display: flex;
     flex-direction: column;
 }
-.item-1 {
-    font-size: large;
+
+/* UI First Item */
+.title {
+    font: 0px Arial, sans-serif;
+    color: rgb(39, 20, 4);
+    text-align: center;
+    font-weight: bold;
+    font-size: 300%;
 }
-.item-2 {
+.gif-container {
+    text-align: center;
+}
+
+.gif-container img {
+    width: 70%;
+    border-radius: 10%;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.context {
+    font: 0px Arial, sans-serif;
+    color: rgb(255, 255, 255);
+    text-align: center;
+    font-weight: bold;
+    font-size: 100%;
+}
+
+.input-1 {
+    text-align: center;
     width: 400px;
     max-width: 100%;
     position: relative;
-    font-size: small;
+}
+
+.input-1 input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+    width: 80%;
+    padding: 8px 20px;
+    border-radius: 50vw;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+
+.placeholder {
+    font-size: 100%;
+    text-align: center;
+    color: aliceblue;
+    position: relative; 
+    font-weight: bold;
+}
+
+.input-2 {
+    text-align: center;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+}
+
+.input-2 input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+    width: 80%;
+    padding: 8px 20px;
+    border-radius: 50vw;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-weight: bold;
+}
+
+.button {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    background:rgb(30, 144, 255);
+    padding: 16px;
+    text-transform: uppercase;
+    color:rgb(210, 231, 250);
+    width: 40%;
+    margin-top: 5%;
+    margin-left: 30%;
+    border-radius:10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
+    -webkit-transition-property: box-shadow, transform;
+    transition-property: box-shadow, transform;
+
+}
+
+.button:hover, .button:focus, .button.active {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    -webkit-transform: scale(1.02);
+    transform: scale(1.02);
 }
 
 .svg-container {
-    width: 2000px;  /* Adjust width */
-    height: 1000px; /* Adjust height */
+    width: 100vw; /* Full width of the viewport */
+    height: 100vh; /* Full height of the viewport */
 }
+
+
