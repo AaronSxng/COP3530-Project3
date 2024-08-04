@@ -1,68 +1,16 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Force-Directed Graph with J3.js and Map</title>
-  <script src="https://cdn.jsdelivr.net/npm/j3.js@latest/dist/j3.min.js"></script>
-  <style>
-    #graph { height: 500px; }
-  </style>
-</head>
-<body>
-  <div id="graph"></div>
-  <script>
-    // Initialize the data structures
-    const nodesMap = new Map();
-    const linksMap = new Map();
 
-    // Add nodes to the map
-    nodesMap.set(1, { id: 1, x: 100, y: 100 });
-    nodesMap.set(2, { id: 2, x: 200, y: 200 });
-    nodesMap.set(3, { id: 3, x: 300, y: 300 });
+<html lang="en">
+  <head>
+    <title>Test</title>
+    <meta name="description" content="daw" />
+    <meta name="author" content="Aaron Song" />
+  </head>
 
-    // Add links to the map
-    linksMap.set(1, { source: 1, target: 2 });
-    linksMap.set(2, { source: 2, target: 3 });
-
-    // Convert maps to arrays for J3.js
-    const nodes = Array.from(nodesMap.values());
-    const links = Array.from(linksMap.values());
-
-    // Create a J3.js force layout
-    const layout = j3.layout.force()
-      .nodes(nodes)
-      .links(links)
-      .size([800, 600])
-      .charge(-120)
-      .linkDistance(30);
-
-    layout.start();
-
-    // Create SVG for the graph
-    const svg = d3.select("#graph").append("svg")
-      .attr("width", 800)
-      .attr("height", 600);
-
-    const link = svg.selectAll(".link")
-      .data(links)
-      .enter().append("line")
-      .attr("class", "link");
-
-    const node = svg.selectAll(".node")
-      .data(nodes)
-      .enter().append("circle")
-      .attr("class", "node")
-      .attr("r", 5);
-
-    // Update positions on each tick
-    layout.on("tick", function() {
-      link.attr("x1", d => nodesMap.get(d.source).x)
-          .attr("y1", d => nodesMap.get(d.source).y)
-          .attr("x2", d => nodesMap.get(d.target).x)
-          .attr("y2", d => nodesMap.get(d.target).y);
-
-      node.attr("cx", d => d.x)
-          .attr("cy", d => d.y);
-    });
-  </script>
-</body>
+  <body>
+    <meta charset="utf-8" />
+    <svg width="960" height="600"></svg>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="index.js"></script>
+  </body>
 </html>
