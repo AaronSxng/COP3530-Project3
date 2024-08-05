@@ -1,7 +1,9 @@
-import pygame # pip install pygame
-import clipboard # pip install clipboard
+import pygame  # pip install pygame
+import clipboard  # pip install clipboard
 import sys
 from Textbox import TextBox
+from algorithms import dijkstra, dfs_shortest_path
+import requests
 
 # Initialize Pygame
 pygame.init()
@@ -19,7 +21,6 @@ GRAY = (150, 150, 150)
 HOVER = (150, 150, 200)
 CLICK = (150, 150, 225)
 
-
 # Button class
 class Button:
     def __init__(self, x, y, width, height, text='', color=GRAY, hover_color=HOVER, text_color=BLACK):
@@ -34,9 +35,6 @@ class Button:
         self.clicked = False
         self.rect = pygame.Rect(x, y, width, height)
         self.font = pygame.font.SysFont(None, 30)
-
-    def text_position(self, ):
-        pass
 
     def draw(self, screen):
         mouse_pos = pygame.mouse.get_pos()
@@ -56,30 +54,45 @@ class Button:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 if self.rect.collidepoint(event.pos):
-                    self.clicked = ~self.clicked # Reverse the click state
+                    self.clicked = ~self.clicked  # Reverse the click state
                     return True
         return False
 
-
+def fetch_wikipedia_links(page):
+    url = "https://en.wikipedia.org/w/api.php"
+    params = {
+        "action": "query",
+        "format": "json",
+        "titles": page,
+        "prop": "links",
+        "pllimit": "max"
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    pages = data['query']['pages']
+    links = []
+    for page_id, page_data in pages.items():
+        if 'links' in page_data:
+            for link in page_data['links']:
+                links.append(link['title'])
+    return links
 
 def main():
     running = True
     clock = pygame.time.Clock()
-
     pygame.display.set_caption("Wiki Racers")
 
-    input_text_box = TextBox(screen_width/2 -200, 100, 400, 50)
-    output_text_box = TextBox(screen_width/2 -200, 400, 400, 50)
+    input_text_box = TextBox(screen_width / 2 - 200, 100, 400, 50)
+    output_text_box = TextBox(screen_width / 2 - 200, 400, 400, 50)
 
     button1 = Button(50, 50, 350, 300, text="Dijkstra's Shortest Path Algorithm")
     button2 = Button(50, 450, 350, 300, text='Depth-First Search')
-    button3 = Button(screen_width/2 -200, 650, 275, 100, text="Wiki Race")
-    button4 = Button(screen_width/2 +100, 650, 100, 100, text="Copy")
+    button3 = Button(screen_width / 2 - 200, 650, 275, 100, text="Wiki Race")
+    button4 = Button(screen_width / 2 + 100, 650, 100, 100, text="Copy")
 
     # Set the fonts of Copy and Wiki Race slightly larger
     button3.font = pygame.font.SysFont(None, 50)
     button4.font = pygame.font.SysFont(None, 50)
-
 
     while running:
         for event in pygame.event.get():
@@ -92,28 +105,33 @@ def main():
             if button2.is_clicked(event):
                 button1.clicked = False
 
-            if button3.is_clicked(event): # IF WIKI RACE BUTTON IS PRESSED, TRY RUNNING ALGORITHMS
+            if button3.is_clicked(event):  # IF WIKI RACE BUTTON IS PRESSED, TRY RUNNING ALGORITHMS
                 button3.clicked = False
-                button3.draw(screen) # Reset the color of the button
+                button3.draw(screen)  # Reset the color of the button
 
-                # HERE CHECK INPUT, TO SEE IF IT IS IN THE SET OF LINKS
+                start_page = input_text_box.enteredText.split()[0]
+                end_page = input_text_box.enteredText.split()[1]
+
+                start_links = fetch_wikipedia_links(start_page)
+                end_links = fetch_wikipedia_links(end_page)
+
+                graph = {start_page: start_links, end_page: end_links}
 
                 if button1.clicked:
                     # RUN DIJKSTRA'S
-                    output_text_box.text = "www.link1.com"
+                    time_taken, path = dijkstra(graph, start_page, end_page)
+                    output_text_box.text = f"Path: {path}\nTime: {time_taken}"
 
                 elif button2.clicked:
                     # RUN DEPTH-FIRST
-                    output_text_box.text = "www.link2butreallylongthistimetoseehowwellithandlesinput.com"
-
+                    time_taken, path = dfs_shortest_path(graph, start_page, end_page)
+                    output_text_box.text = f"Path: {path}\nTime: {time_taken}"
 
             if button4.is_clicked(event):
                 button4.clicked = False
                 clipboard.copy(output_text_box.text)
 
             input_text_box.handle_event(event)
-
-
 
         screen.fill(BACKGROUND)
         button1.draw(screen)
@@ -128,7 +146,6 @@ def main():
         clock.tick(30)
 
     pygame.quit()
-
 
 if __name__ == "__main__":
     main()
