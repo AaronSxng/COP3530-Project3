@@ -1,84 +1,76 @@
 import time
-import heapq  # Import the heapq module to use a priority queue
+import heapq
 
 def dijkstra(graph, start, end):
-    # Find the shortest path using Dijkstra's algorithm.
-    priority_queue = [(0, start)]  # Initialize priority queue with the start node and distance 0
-    distances = {vertex: float('inf') for vertex in graph}  # Set initial distances to infinity for all nodes
-    distances[start] = 0  # Distance to the start node is 0
-    previous_nodes = {vertex: None for vertex in graph}  # Track the previous node for each node to reconstruct path
+    # Record the start time for performance measurement
+    start_time = time.time()
+    
+    # Initialize the priority queue with the starting vertex and distance 0
+    priority_queue = [(0, start)]
+    
+    # Set initial distances to infinity for all vertices
+    distances = {vertex: float('inf') for vertex in graph}
+    distances[start] = 0
+    
+    # Dictionary to store the previous node for path reconstruction
+    previous_nodes = {vertex: None for vertex in graph}
 
-    while priority_queue:  # Continue while there are nodes to process
-        current_distance, current_vertex = heapq.heappop(priority_queue)  # Get the node with the smallest distance
+    while priority_queue:
+        # Get the vertex with the smallest distance
+        current_distance, current_vertex = heapq.heappop(priority_queue)
 
-        if current_vertex == end:  # If the end node is reached
-            path = []  # Initialize the path list
-            while current_vertex is not None:  # Reconstruct the path
-                path.append(current_vertex)  # Add the current node to the path
-                current_vertex = previous_nodes[current_vertex]  # Move to the previous node
-            return path[::-1]  # Return the reversed path
+        # If we reached the end vertex, reconstruct the path and return it with the elapsed time
+        if current_vertex == end:
+            path = []
+            while current_vertex is not None:
+                path.append(current_vertex)
+                current_vertex = previous_nodes[current_vertex]
+            end_time = time.time()
+            return end_time - start_time, path[::-1]  # Return time taken and path
 
-        if current_distance > distances[current_vertex]:  # Ignore outdated distances
-            continue  # Skip to the next iteration
+        # Skip if the distance is not optimal
+        if current_distance > distances[current_vertex]:
+            continue
 
-        for neighbor in graph[current_vertex]:  # Explore neighbors of the current node
-            distance = current_distance + 1  # All edges have weight 1
-            if distance < distances[neighbor]:  # If a shorter path is found
-                distances[neighbor] = distance  # Update the shortest distance
-                previous_nodes[neighbor] = current_vertex  # Update the previous node
-                heapq.heappush(priority_queue, (distance, neighbor))  # Push the neighbor into the priority queue
-    return None  # Return None if no path is found
+        # Explore neighbors of the current vertex
+        for neighbor in graph[current_vertex]:
+            distance = current_distance + 1  # Assume all edges have a weight of 1
+            if distance < distances[neighbor]:
+                # Update the shortest distance and path
+                distances[neighbor] = distance
+                previous_nodes[neighbor] = current_vertex
+                heapq.heappush(priority_queue, (distance, neighbor))
+
+    # If no path is found, return None with the elapsed time
+    end_time = time.time()
+    return end_time - start_time, None
 
 def dfs_shortest_path(graph, start, end):
-    # Find the shortest path using DFS.
+    # Record the start time for performance measurement
+    start_time = time.time()
 
+    # Helper function for Depth-First Search
     def dfs(current, end, path, visited, paths):
-        if current in visited:  # If the current node is already visited
-            return  # Return to avoid cycles
-        visited.add(current)  # Mark the current node as visited
-        path.append(current)  # Add the current node to the path
-        if current == end:  # If the end node is reached
-            paths.append(list(path))  # Add the current path to the list of paths
+        if current in visited:
+            return
+        visited.add(current)
+        path.append(current)
+        if current == end:
+            paths.append(list(path))
         else:
-            for neighbor in graph.get(current, []):  # Explore neighbors of the current node
-                if neighbor not in visited:  # If the neighbor is not visited
-                    dfs(neighbor, end, path, visited, paths)  # Recursively call DFS
-        path.pop()  # Remove the current node from the path (backtrack)
-        visited.remove(current)  # Mark the current node as unvisited (backtrack)
+            for neighbor in graph.get(current, []):
+                if neighbor not in visited:
+                    dfs(neighbor, end, path, visited, paths)
+        path.pop()
+        visited.remove(current)
 
-    paths = []  # Initialize the list of all possible paths
-    dfs(start, end, [], set(), paths)  # Call the DFS function
-    shortest_path = min(paths, key=len) if paths else None  # Find the shortest path
-    return shortest_path  # Return the shortest path
-
-def main():
-    # Example graph represented as an adjacency list
-    graph = {
-        'A': ['B', 'C', 'D'],
-        'B': ['A', 'E', 'D'],
-        'C': ['A', 'D'],
-        'D': ['A', 'B', 'C', 'E'],
-        'E': ['B', 'D']
-    }
-
-    start = 'A'
-    end = 'E'
-
-    # Test Dijkstra's algorithm
-    print("Testing Dijkstra's algorithm:")
-    start_time = time.time()
-    dijkstra_path = dijkstra(graph, start, end)
+    # List to store all possible paths from start to end
+    paths = []
+    dfs(start, end, [], set(), paths)
+    
+    # Find the shortest path based on length
+    shortest_path = min(paths, key=len) if paths else None
+    
+    # Record the end time and return the shortest path with the elapsed time
     end_time = time.time()
-    print(f"Shortest path from {start} to {end} using Dijkstra's algorithm: {dijkstra_path}")
-    print(f"Time taken by Dijkstra's algorithm: {end_time - start_time} seconds")
-
-    # Test DFS for shortest path
-    print("\nTesting DFS algorithm:")
-    start_time = time.time()
-    dfs_path = dfs_shortest_path(graph, start, end)
-    end_time = time.time()
-    print(f"Shortest path from {start} to {end} using DFS: {dfs_path}")
-    print(f"Time taken by DFS: {end_time - start_time} seconds")
-
-# Call the main function directly at the top level
-main()
+    return end_time - start_time, shortest_path
