@@ -1,7 +1,6 @@
 <!DOCTYPE html>
-
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>WIKI-RACERS</title>
     <meta name="description" content="Find the shortest path between two Wikipedia pages" />
@@ -10,10 +9,11 @@
     <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
     <script src="https://pyscript.net/alpha/pyscript.js" defer></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
-  </head>
-  <body>
+    <script type="module" src="index.js"></script>
+</head>
+<body>
     <div class="container">
-        <svg class="svg-container" viewBox="-500 -500 1000 1000"></svg>
+        <svg class="svg-container" viewBox="-500 -500 1000 1000" width="800" height="800"></svg>
         <div class="user_interface">
             <div class="title">
                 <p>Wiki-Racers</p>
@@ -34,10 +34,10 @@
                 <input id="input2" type="text" placeholder="Enter the second page" />
             </div>
             <button id="fetchButton" class="button">Enter</button>
-            <p id="text"></p>
+            <p id="timeTaken"></p>
+            <p id="shortestPath"></p>
         </div>
     </div>
-    <script src="index.js"></script>
     <script src="src/getLinks.js"></script>
 </body>
 </html>
