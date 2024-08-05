@@ -9,6 +9,7 @@ html, body {
     display: flex;
 }
 
+
 h1 {
     color:green;
 }
@@ -129,7 +130,6 @@ svg {
     transition-duration: .2s;
     -webkit-transition-property: box-shadow, transform;
     transition-property: box-shadow, transform;
-
 }
 
 .button:hover, .button:focus, .button.active {
@@ -143,4 +143,9 @@ svg {
     height: 100vh; /* Full height of the viewport */
 }
 
-
+#timeTaken, #shortestPath {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
