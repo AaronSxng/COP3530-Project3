@@ -1,3 +1,5 @@
+//algorithms.js
+
 export function dijkstra(graph, start, end) {
     let start_time = performance.now();
     let priority_queue = [{ node: start, distance: 0 }];
@@ -44,6 +46,7 @@ export function dijkstra(graph, start, end) {
 
 export function dfs_shortest_path(graph, start, end) {
     let start_time = performance.now();
+
     let stack = [[start]];
     let visited = new Set();
 
@@ -57,15 +60,48 @@ export function dfs_shortest_path(graph, start, end) {
         }
 
         if (!visited.has(node)) {
-            visited.add(node);
-            if (graph[node]) {
-                graph[node].forEach(neighbor => {
-                    let new_path = [...path, neighbor];
-                    stack.push(new_path);
-                });
+            visited.add(node); 
+            if (graph.has(node)) {
+                for (let neighbor of graph.get(node)) {
+                    if (!visited.has(neighbor)) {
+                        stack.push([...path, neighbor]); 
+                    }
+                }
             }
         }
     }
+
+    let end_time = performance.now();
+    return [(end_time - start_time) / 1000, []];  // Return empty path if not found
+}
+
+export function bfs_shortest_path(graph, start, end) {
+    let start_time = performance.now();
+
+    let queue = [[start]];
+    let visited = new Set();
+
+    while (queue.length > 0) {
+        let path = queue.shift();
+        let node = path[path.length - 1];
+
+        if (node === end) {
+            let end_time = performance.now();
+            return [(end_time - start_time) / 1000, path];
+        }
+
+        if (!visited.has(node)) {
+            visited.add(node); 
+            if (graph.has(node)) {
+                for (let neighbor of graph.get(node)) {
+                    if (!visited.has(neighbor)) {
+                        queue.push([...path, neighbor]); 
+                    }
+                }
+            }
+        }
+    }
+
     let end_time = performance.now();
     return [(end_time - start_time) / 1000, []];  // Return empty path if not found
 }
