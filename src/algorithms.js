@@ -1,17 +1,17 @@
-//algorithms.js
+// algorithms.js
 
 export function dijkstra(graph, start, end) {
     let start_time = performance.now();
     let priority_queue = [{ node: start, distance: 0 }];
-    let distances = {};
-    let previous = {};
-    distances[start] = 0;
+    let distances = new Map();
+    let previous = new Map();
+    distances.set(start, 0);
 
-    for (let node in graph) {
+    for (let node of graph.keys()) {
         if (node !== start) {
-            distances[node] = Infinity;
+            distances.set(node, Infinity);
         }
-        previous[node] = null;
+        previous.set(node, null);
     }
 
     while (priority_queue.length > 0) {
@@ -23,21 +23,21 @@ export function dijkstra(graph, start, end) {
             let temp = current_node;
             while (temp) {
                 path.push(temp);
-                temp = previous[temp];
+                temp = previous.get(temp);
             }
             let end_time = performance.now();
             return [(end_time - start_time) / 1000, path.reverse()];
         }
 
-        if (graph[current_node]) {
-            graph[current_node].forEach(neighbor => {
-                let distance = distances[current_node] + 1;  // Assume each link has a distance of 1
-                if (distance < distances[neighbor]) {
-                    distances[neighbor] = distance;
-                    previous[neighbor] = current_node;
+        if (graph.has(current_node)) {
+            for (let neighbor of graph.get(current_node)) {
+                let distance = distances.get(current_node) + 1;  // Assume each link has a distance of 1
+                if (distance < distances.get(neighbor)) {
+                    distances.set(neighbor, distance);
+                    previous.set(neighbor, current_node);
                     priority_queue.push({ node: neighbor, distance });
                 }
-            });
+            }
         }
     }
     let end_time = performance.now();
@@ -46,7 +46,6 @@ export function dijkstra(graph, start, end) {
 
 export function dfs_shortest_path(graph, start, end) {
     let start_time = performance.now();
-
     let stack = [[start]];
     let visited = new Set();
 
@@ -77,7 +76,6 @@ export function dfs_shortest_path(graph, start, end) {
 
 export function bfs_shortest_path(graph, start, end) {
     let start_time = performance.now();
-
     let queue = [[start]];
     let visited = new Set();
 
