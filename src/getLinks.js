@@ -119,15 +119,15 @@ async function createMap(input1, input2) {
 
     while(!found) {
         let tempPage = queue.shift();
-        if(tempPage.toLowerCase() === input2.toLowerCase()) {
-            found = true;
-            continue;
-        }
         if (wikiMap.has(tempPage)) continue;
 
         let tempArray = await fetchWikipediaLinks(tempPage);
         wikiMap.set(tempPage, tempArray);
         for (const pages of tempArray) {
+            if(pages.toLowerCase() === input2.toLowerCase()) {
+                found = true;
+                continue;
+            }
             queue.push(pages);
         }
     }
