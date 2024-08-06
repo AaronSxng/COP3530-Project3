@@ -1,3 +1,37 @@
+// getLinks.js
+//https://www.mediawiki.org/wiki/API:Links#Response
+
+/*//event listener
+document.getElementById('fetchButton').addEventListener('click', async () => {
+    // Reset data
+    document.getElementById('timeTaken').textContent = '';
+    document.getElementById('shortestPath').textContent = '';
+    // Get the values from input fields
+    const input1 = document.getElementById('input1').value;
+    const input2 = document.getElementById('input2').value;
+    if(input1 === "" || input2 === "") {
+        alert("Page name is invalid");
+        return;
+    }
+    //Checks if page exists
+    const [exists1, exists2] = await Promise.all([checkPage(input1), checkPage(input2)]);
+    if (!exists1) {
+        console.log("Input 1 page does not exist");
+        return;
+    }
+    if (!exists2) {
+        console.log("Input 2 page does not exist");
+        return;
+    }
+
+    // Call your function with the retrieved values
+    console.log('First page:', input1);
+    console.log('Second page:', input2);
+
+    //creates the map
+    createMap(input1, input2);
+});*/
+
 //checks if page exists
 async function checkPage(pageName) {
     var url = "https://en.wikipedia.org/w/api.php";
@@ -78,4 +112,26 @@ async function fetchWikipediaLinks(pageName) {
     return linksArray;
 }
 
-export { checkPage, fetchWikipediaLinks };
+async function createMap(input1, input2) {
+    var queue = [input1];
+    let wikiMap = new Map();
+    let found = false;
+
+    while(!found) {
+        let tempPage = queue.shift();
+        if(tempPage.toLowerCase() === input2.toLowerCase()) {
+            found = true;
+            continue;
+        }
+        if (wikiMap.has(tempPage)) continue;
+
+        let tempArray = await fetchWikipediaLinks(tempPage);
+        wikiMap.set(tempPage, tempArray);
+        for (const pages of tempArray) {
+            queue.push(pages);
+        }
+    }
+    return wikiMap;
+}
+
+export { checkPage, fetchWikipediaLinks, createMap };
