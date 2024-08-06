@@ -127,6 +127,7 @@ svg {
     transition-duration: .2s;
     -webkit-transition-property: box-shadow, transform;
     transition-property: box-shadow, transform;
+
 }
 
 .button:hover, .button:focus, .button.active {
@@ -140,9 +141,49 @@ svg {
     height: 100vh; /* Full height of the viewport */
 }
 
-#timeTaken, #shortestPath {
-    font-size: 16px;
+#timeTaken {
+    text-align: center;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+
+    font-size: 20px;
     font-weight: bold;
     margin-top: 20px;
     color: #333;
+}
+
+#DFSTime, #BFSTime {
+    text-align: center;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;   
+}
+
+#DFSPath, #BFSPath {
+    text-align: center;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;   
+}
+
+#dijkstraPath {
+    text-align: center;
+    width: 400px;
+    max-width: 100%;
+    position: relative;
+
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #fc9e52;   
 }

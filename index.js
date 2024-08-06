@@ -1,108 +1,103 @@
-import { dijkstra, dfs_shortest_path } from './src/algorithms.js';
-import { checkPage, createMap, fetchWikipediaLinks } from './src/getLinks.js';
+import { dijkstra, dfs_shortest_path, bfs_shortest_path } from './src/algorithms.js';
+import { checkPage, createMap } from './src/getLinks.js';
 
 let loadingInterval;
 
 function startLoadingAnimation(element, baseText) {
-    let dotCount = 0;
-    loadingInterval = setInterval(() => {
-        dotCount = (dotCount + 1) % 4;
-        element.textContent = baseText + '.'.repeat(dotCount);
-    }, 500);
+  let dotCount = 0;
+  loadingInterval = setInterval(() => {
+      dotCount = (dotCount + 1) % 4;
+      element.textContent = baseText + '.'.repeat(dotCount);
+  }, 500);
 }
 
 function stopLoadingAnimation(element, finalText) {
-    clearInterval(loadingInterval);
-    element.textContent = finalText;
+  clearInterval(loadingInterval);
+  element.textContent = finalText;
 }
 
 document.getElementById('fetchButton').addEventListener('click', async () => {
-    const input1 = document.getElementById('input1').value;
-    const input2 = document.getElementById('input2').value;
-    if (input1 === "" || input2 === "") {
-        alert("Page name is invalid");
-        return;
-    }
+  // Reset data
+  const timeTakenElement = document.getElementById('timeTaken');
+  timeTakenElement.textContent = "";
 
-    const timeTakenElement = document.getElementById('timeTaken');
-    const shortestPathElement = document.getElementById('shortestPath');
+  const dijkstraTimeElement = document.getElementById('dijkstraTime');
+  dijkstraTimeElement.textContent = "";
+  const DFSTimeElement = document.getElementById('DFSTime');
+  DFSTimeElement.textContent = "";
+  const BFSTimeElement = document.getElementById('BFSTime');
+  BFSTimeElement.textContent = "";
 
-    startLoadingAnimation(timeTakenElement, "Nodes being collected");
-    shortestPathElement.textContent = "";
+  const dijkstraPathElement = document.getElementById('dijkstraPath');
+  dijkstraPathElement.textContent = "";
+  const DFSPathElement = document.getElementById('DFSPath');
+  DFSPathElement.textContent = "";
+  const BFSPathElement = document.getElementById('BFSPath');
+  BFSPathElement.textContent = "";
 
-    const [exists1, exists2] = await Promise.all([checkPage(input1), checkPage(input2)]);
-    if (!exists1 || !exists2) {
-        stopLoadingAnimation(timeTakenElement, "Error: One or both pages do not exist");
-        return;
-    }
+  // Get the values from input fields
+  const input1 = document.getElementById('input1').value;
+  const input2 = document.getElementById('input2').value;
+  if(input1 === "" || input2 === "") {
+      alert("Page name is invalid");
+      return;
+  }
+  //Checks if page exists
+  const [exists1, exists2] = await Promise.all([checkPage(input1), checkPage(input2)]);
+  if (!exists1) {
+      console.log("Input 1 page does not exist");
+      return;
+  }
+  if (!exists2) {
+      console.log("Input 2 page does not exist");
+      return;
+  }
 
-    const startCollectionTime = performance.now();
-    const links1 = await fetchWikipediaLinks(input1);
-    const links2 = await fetchWikipediaLinks(input2);
-    const endCollectionTime = performance.now();
+  // Call your function with the retrieved values
+  console.log('First page:', input1);
+  console.log('Second page:', input2);
 
-    const collectionTime = (endCollectionTime - startCollectionTime) / 1000;
-    stopLoadingAnimation(timeTakenElement, `Nodes collected in ${collectionTime}s`);
+  startLoadingAnimation(timeTakenElement, "Nodes being collected");
 
-    if (links1.length === 0 && links2.length === 0) {
-        alert("No links found for both pages");
-        return;
-    }
+  const startCollectionTime = performance.now();
+  //creates the map
+  const graph = await createMap(input1, input2);
+  console.log(graph);
+  const endCollectionTime = performance.now();
 
-    if (links1.length === 0) {
-        alert(`No links found for ${input1}`);
-        return;
-    }
+  /*update elements on website*/
 
-    if (links2.length === 0) {
-        alert(`No links found for ${input2}`);
-        return;
-    }
+  //time
+  const collectionTime = (endCollectionTime - startCollectionTime) / 1000;
+  stopLoadingAnimation(timeTakenElement, `Nodes collected in ${collectionTime}s`);
+  //dijkstra
+  /*
+  startLoadingAnimation(dijkstraPathElement, "Searching for shortest path using Dijkstra's Algorithm");
+  const [dijkstraTime, dijkstraPath] = dijkstra(graph, input1, input2);
+  stopLoadingAnimation(dijkstraPathElement, `Dijkstra's Algorithm completed in ${dijkstraTime}s`);
+  */
+  //dfs
+  startLoadingAnimation(DFSTimeElement, "Searching for shortest path using DFS");
+  const [dfsTime, dfsPath] = dfs_shortest_path(graph, input1, input2);
+  stopLoadingAnimation(DFSTimeElement, `DFS completed in ${dfsTime}s`);
+  //bfs
+  startLoadingAnimation(BFSTimeElement, "Searching for shortest path using DFS");
+  const [bfsTime, bfsPath] = bfs_shortest_path(graph, input1, input2);
+  stopLoadingAnimation(BFSTimeElement, `DFS completed in ${bfsTime}s`);
 
-    console.log('Links from page 1:', links1);
-    console.log('Links from page 2:', links2);
+  //time visual
+  //dijkstraTimeElement.textContent = `Dijkstra's Algorithm Time: ${dijkstraTime}s`;
+  DFSTimeElement.textContent = `DFS Time: ${dfsTime}s`;
+  BFSTimeElement.textContent = `BFS Time: ${bfsTime}s`;
 
-    //const graph = buildGraph(links1, links2, input1, input2);
-    const graph = await createMap(input1, input2);
-    console.log(graph);
+  dijkstraPathElement.textContent = `${dfsPath.length} Degrees of Seperation`;
+  //dijkstraPathElement.textContent = `\nDijkstra's Path: ${dijkstraPath.length > 0 ? dijkstraPath.join(' -> ') : 'No path found'}`;
+  DFSPathElement.textContent = `DFS Path: ${dfsPath.length > 0 ? dfsPath.join(' -> ') : 'No path found'}`;
+  BFSPathElement.textContent = `BFS Path: ${bfsPath.length > 0 ? bfsPath.join(' -> ') : 'No path found'}`;
 
-    startLoadingAnimation(shortestPathElement, "Searching for shortest path using Dijkstra's Algorithm");
-    const [dijkstraTime, dijkstraPath] = dijkstra(graph, input1, input2);
-    stopLoadingAnimation(shortestPathElement, `Dijkstra's Algorithm completed in ${dijkstraTime}s`);
-
-    startLoadingAnimation(shortestPathElement, "Searching for shortest path using DFS");
-    const [dfsTime, dfsPath] = dfs_shortest_path(graph, input1, input2);
-    stopLoadingAnimation(shortestPathElement, `DFS completed in ${dfsTime}s`);
-
-    timeTakenElement.textContent += `\n\nDijkstra's Algorithm Time: ${dijkstraTime}s\nDFS Time: ${dfsTime}s`;
-    shortestPathElement.textContent = `\nDijkstra's Path: ${dijkstraPath.length > 0 ? dijkstraPath.join(' -> ') : 'No path found'}\nDFS Path: ${dfsPath.length > 0 ? dfsPath.join(' -> ') : 'No path found'}`;
-
-    // Visualize both shortest paths
-    visualizePaths(dijkstraPath, dfsPath);
+  // Visualize both shortest paths
+  visualizePaths(bfsPath, dfsPath);
 });
-
-function buildGraph(links1, links2, startPage, endPage) {
-    let graph = {};
-
-    graph[startPage] = links1.length > 0 ? links1 : [];
-    graph[endPage] = links2.length > 0 ? links2 : [];
-
-    links1.forEach(link => {
-        if (!graph[link]) {
-            graph[link] = [];
-        }
-        graph[link].push(startPage);
-    });
-
-    links2.forEach(link => {
-        if (!graph[link]) {
-            graph[link] = [];
-        }
-        graph[link].push(endPage);
-    });
-
-    return graph;
-}
 
 function visualizePaths(dijkstraPath, dfsPath) {
     // Clear previous SVG elements before drawing new ones
@@ -207,101 +202,3 @@ function visualizePaths(dijkstraPath, dfsPath) {
         d.fy = null;
     }
 }
-
-
-/*
-//initilize svg or grab svg
- var svg = d3.select("svg");
- var width = svg.attr("width");
- var height = svg.attr("height");
-
- var graphData = {
-   nodes: [{ name: "A" }, { name: "B" }, { name: "C" }, { name: "D" }],
-   links: [
-     { source: "A", target: "B"},
-     { source: "A", target: "C"},
-     { source: "A", target: "D"},
-     //{ source: "B", target: "C" },
-     //{ source: "D", target: "C" }
-   ]
- };
-
- var simulation = d3
-   .forceSimulation(graphData.nodes)
-   .force("charge", d3.forceManyBody().strength(-30))
-   .force("center", d3.forceCenter(width / 2, height / 2))
-   .force("link", d3.forceLink(graphData.links).id(d => d.name))
-   .on("tick", ticked);
-
- var links = svg
-   .append("g")
-   .selectAll("line")
-   .data(graphData.links)
-   .enter()
-   .append("line")
-   .attr("stroke-width", 3)
-   .style("stroke", "orange");
-
- links.append("text").text(d => d.name);
-
- var nodes = svg
-   .append("g")
-   .selectAll("circle")
-   .data(graphData.nodes)
-   .enter()
-   .append("circle")
-   .attr("r", 10)
-   .attr("fill", "red");
-
- var drag = d3
-   .drag()
-   .on("start", dragstarted)
-   .on("drag", dragged)
-   .on("end", dragended);
-
- nodes.call(drag);
-
- function ticked() {
-   //updating the position
-   nodes
-     .attr("cx", function(d) {
-       return d.x;
-     })
-     .attr("cy", function(d) {
-       return d.y;
-     });
-
-   links
-     .attr("x1", function(d) {
-       return d.source.x;
-     })
-     .attr("y1", function(d) {
-       return d.source.y;
-     })
-     .attr("x2", function(d) {
-       return d.target.x;
-     })
-     .attr("y2", function(d) {
-       return d.target.y;
-     });
-   console.log(simulation.alpha());
- }
-
- function dragstarted(d) {
-   //your alpha hit 0 it stops! make it run again
-   simulation.alphaTarget(0.3).restart();
-   d.fx = d3.event.x;
-   d.fy = d3.event.y;
- }
- function dragged(d) {
-   d.fx = d3.event.x;
-   d.fy = d3.event.y;
- }
-
- function dragended(d) {
-   // alpha min is 0, head there
-   simulation.alphaTarget(0);
-   d.fx = null;
-   d.fy = null;
- }
-*/
