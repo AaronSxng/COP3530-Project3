@@ -61,7 +61,7 @@ export function dfs_shortest_path(graph, start, end) {
 
         if (!visited.has(node)) {
             visited.add(node); 
-            if (graph.get(node)) {
+            if (graph.has(node)) {
                 for (let neighbor of graph.get(node)) {
                     if (!visited.has(neighbor)) {
                         stack.push([...path, neighbor]); 
@@ -92,7 +92,7 @@ export function bfs_shortest_path(graph, start, end) {
 
         if (!visited.has(node)) {
             visited.add(node); 
-            if (graph.get(node)) {
+            if (graph.has(node)) {
                 for (let neighbor of graph.get(node)) {
                     if (!visited.has(neighbor)) {
                         queue.push([...path, neighbor]); 
