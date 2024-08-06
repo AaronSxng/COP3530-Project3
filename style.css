@@ -33,8 +33,6 @@ svg {
     height: 98vh;
     background-color: rgb(106, 168, 209);
     border-radius: 20px; /* Radius for rounded corners */
-    /*
-    border: 2px solid darkblue; /* Optional border */
     margin: 1%; /* Optional margin */
     padding-left: 0px;
     display: flex;
@@ -76,7 +74,7 @@ svg {
 }
 
 .input-1 input {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.4);
     border: 2px solid white;
     width: 80%;
     padding: 8px 20px;
@@ -102,7 +100,7 @@ svg {
 }
 
 .input-2 input {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.4);
     border: 2px solid white;
     width: 80%;
     padding: 8px 20px;
