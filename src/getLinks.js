@@ -109,7 +109,7 @@ document.getElementById('fetchButton').addEventListener('click', async () => {
     var graphData = {
         nodes: [{ name: input1 }, { name: input2 }],
         links: links1.map(link => ({ source: input1, target: link })).concat(links2.map(link => ({ source: input2, target: link }))
-    };
+)};
 
     console.log('Graph Data:', graphData);
 
